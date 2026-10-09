@@ -1,0 +1,584 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>黄金外汇研究地图</title>
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#eef1f6;
+    --surface:#ffffff;
+    --surface-2:#f4f6fa;
+    --ink:#16213a;
+    --ink-soft:#3c4660;
+    --muted:#6b7489;
+    --line:#d8dde6;
+    --accent:#a9791f;
+    --accent-ink:#5c3f0f;
+    --accent-soft:#f3e6c9;
+    --good:#2f6f4f;
+    --good-soft:#dff0e6;
+    --bad:#9c3b32;
+    --bad-soft:#f6e1dd;
+    --warn:#8a6d1f;
+    --warn-soft:#f1e8cf;
+    --closed:#5c6476;
+    --closed-soft:#e4e6ec;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1420;
+      --surface:#161d2c;
+      --surface-2:#1b2334;
+      --ink:#e8ecf4;
+      --ink-soft:#c3cadd;
+      --muted:#8d97ad;
+      --line:#2a3347;
+      --accent:#d9a84e;
+      --accent-ink:#2a2010;
+      --accent-soft:#3a2f14;
+      --good:#6cbf93;
+      --good-soft:#163427;
+      --bad:#e08a7d;
+      --bad-soft:#3a1f1c;
+      --warn:#ddc066;
+      --warn-soft:#352c14;
+      --closed:#9aa3b8;
+      --closed-soft:#242b3c;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1420;
+    --surface:#161d2c;
+    --surface-2:#1b2334;
+    --ink:#e8ecf4;
+    --ink-soft:#c3cadd;
+    --muted:#8d97ad;
+    --line:#2a3347;
+    --accent:#d9a84e;
+    --accent-ink:#2a2010;
+    --accent-soft:#3a2f14;
+    --good:#6cbf93;
+    --good-soft:#163427;
+    --bad:#e08a7d;
+    --bad-soft:#3a1f1c;
+    --warn:#ddc066;
+    --warn-soft:#352c14;
+    --closed:#9aa3b8;
+    --closed-soft:#242b3c;
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    padding:28px 16px 56px;
+    line-height:1.55;
+  }
+  .wrap{max-width:860px; margin:0 auto;}
+
+  .masthead{margin-bottom:28px;}
+  .eyebrow{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 10px;
+  }
+  h1{
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    font-size:clamp(28px, 6vw, 42px);
+    line-height:1.08;
+    margin:0 0 10px;
+    text-wrap:balance;
+    letter-spacing:-.01em;
+  }
+  .sub{color:var(--muted); font-size:15px; max-width:56ch; margin:0;}
+
+  .board{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    margin:24px 0 8px;
+  }
+  .stat{background:var(--surface); padding:14px 12px; text-align:center;}
+  .stat .n{
+    font-family:"IBM Plex Mono", monospace;
+    font-weight:600;
+    font-size:22px;
+    font-variant-numeric:tabular-nums;
+    color:var(--ink);
+  }
+  .stat .l{font-size:12px; color:var(--muted); margin-top:2px;}
+  @media (max-width:560px){ .board{grid-template-columns:repeat(2,1fr);} }
+
+  .verdict{
+    display:flex; gap:10px; align-items:flex-start;
+    background:var(--accent-soft); border:1px solid var(--accent);
+    border-radius:10px; padding:14px 16px; margin:18px 0 32px;
+    font-size:14px; color:var(--accent-ink);
+  }
+  .verdict b{font-family:"Fraunces", serif; font-weight:600; font-size:15px;}
+
+  nav.jump{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-bottom:30px;
+  }
+  nav.jump a{
+    font-size:12.5px; color:var(--ink-soft); text-decoration:none;
+    border:1px solid var(--line); border-radius:999px;
+    padding:5px 12px; background:var(--surface);
+  }
+  nav.jump a:hover{border-color:var(--accent); color:var(--accent-ink);}
+
+  section{margin-bottom:14px;}
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:4px 0;
+  }
+  details{border-bottom:1px solid var(--line);}
+  details:last-child{border-bottom:none;}
+  summary{
+    list-style:none; cursor:pointer;
+    display:flex; align-items:center; gap:10px;
+    padding:14px 18px;
+    font-family:"Fraunces", serif; font-weight:600; font-size:17px;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::before{
+    content:"›"; display:inline-block; transform:rotate(0deg);
+    transition:transform .15s ease; color:var(--accent); font-size:20px; width:12px;
+  }
+  details[open] summary::before{transform:rotate(90deg);}
+  .tag{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:10.5px; letter-spacing:.03em;
+    padding:2px 8px; border-radius:999px; font-weight:600;
+    white-space:nowrap;
+  }
+  .tag.live{background:var(--good-soft); color:var(--good);}
+  .tag.test{background:var(--warn-soft); color:var(--warn);}
+  .tag.closed{background:var(--closed-soft); color:var(--closed);}
+  .tag.new{background:var(--accent-soft); color:var(--accent-ink);}
+  .tag.bad{background:var(--bad-soft); color:var(--bad);}
+
+  .body{padding:0 18px 20px 40px; font-size:14.5px; color:var(--ink-soft);}
+  .body p{margin:0 0 10px;}
+  .body ul{margin:0 0 10px; padding-left:18px;}
+  .body li{margin-bottom:6px;}
+  .body .note{
+    font-size:13px; color:var(--muted); border-left:2px solid var(--line);
+    padding-left:10px; margin-top:10px;
+  }
+  code, .mono{font-family:"IBM Plex Mono", monospace; font-size:0.92em;}
+  .code-chip{
+    background:var(--surface-2); border:1px solid var(--line);
+    border-radius:5px; padding:1px 6px; font-size:12.5px;
+  }
+
+  table{width:100%; border-collapse:collapse; font-size:13px; margin:10px 0;}
+  thead th{
+    text-align:left; font-family:"IBM Plex Mono", monospace; font-weight:600;
+    font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--muted); border-bottom:1px solid var(--line); padding:6px 8px;
+  }
+  tbody td{
+    padding:7px 8px; border-bottom:1px solid var(--line);
+    font-variant-numeric:tabular-nums;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  .num{text-align:right; font-family:"IBM Plex Mono", monospace;}
+  .win{color:var(--good); font-weight:600;}
+  .lose{color:var(--bad);}
+
+  .tablewrap{overflow-x:auto;}
+
+  footer{
+    margin-top:36px; padding-top:16px; border-top:1px solid var(--line);
+    font-size:12px; color:var(--muted); font-family:"IBM Plex Mono", monospace;
+  }
+</style>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <p class="eyebrow">Forex Trader · 研究地图 · 黄金/外汇</p>
+    <h1>黄金外汇日内交易研究地图</h1>
+    <p class="sub">从一份跨数据源回测核验开始，到发现真实掉期费吞掉大半收益，再到推广至外汇主要货币对和三个B站交易教学视频策略——这条线上已验证、已证伪的结论，按时间线排列。</p>
+  </div>
+
+  <div class="board">
+    <div class="stat"><div class="n">16.75年</div><div class="l">M1历史数据(HistData)</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">品种(XAU/EUR/GBP/AUD)</div></div>
+    <div class="stat"><div class="n">12</div><div class="l">策略变体测过</div></div>
+    <div class="stat"><div class="n">0.32</div><div class="l">最佳变体Sharpe(跑不赢买持)</div></div>
+  </div>
+
+  <div class="verdict">
+    <span>📌</span>
+    <div><b>当前结论：</b>这条研究线里测过的每一个"主动交易"变体，在诚实计入真实交易成本与真实隔夜掉期费之后，<b>都没能跑赢简单买入持有黄金</b>（买持Sharpe 0.545 vs 最佳主动策略0.32）。成本结构的不对称性（黄金空头零掉期费）两次被尝试利用（黄金空头、外汇主要货币对多头）均告失败——根源都是信号本身缺乏edge，不是成本问题。三个B站交易教学视频策略("顺势+截取+结构"ICT风格、"4小时区间假突破打脸"、"网格马丁格尔无止损加仓")机械化测试/压力测试后均是负面结果：前两个是滚动年度窗口全负或接近全负、复利仓位下账户爆仓；第三个是24组压力测试里87.5%在1-3.5年内把账户亏穿，说明"无止损加仓"这种机制本身对尾部风险没有保护。</div>
+  </div>
+
+  <nav class="jump">
+    <a href="#data">数据资产</a>
+    <a href="#verify">起点：跨数据源核验</a>
+    <a href="#structure">核心策略结构</a>
+    <a href="#cost-fix">成本常数修正</a>
+    <a href="#sweep">多周期扫描</a>
+    <a href="#exit">止盈止损优化</a>
+    <a href="#swap">真实掉期费发现</a>
+    <a href="#baseline">诚实基准：买入持有对照</a>
+    <a href="#short">空头swap不对称测试</a>
+    <a href="#fxmajors">推广到外汇主要货币对</a>
+    <a href="#ict-video">B站ICT视频策略测试</a>
+    <a href="#range-fade-video">B站4H区间假突破视频测试</a>
+    <a href="#btc-swap">BTC/USDT隔夜费核验</a>
+    <a href="#other-author-diff">真实tick_volume补测(含纠错)</a>
+    <a href="#grid-martingale">B站网格马丁格尔视频测试</a>
+    <a href="#verdict-detail">全局结论</a>
+  </nav>
+
+  <section id="data">
+    <div class="card">
+      <details open>
+        <summary><span class="tag live">数据</span>数据资产</summary>
+        <div class="body">
+          <ul>
+            <li><b>XAUUSD / EURUSD / GBPUSD / AUDUSD</b> — HistData.com M1分钟数据，2010-01至2026-09，约16.75年，本地parquet存于 <code class="code-chip">/Volumes/My Passport/working_data/forex_trader/data/</code>。</li>
+            <li><b>实盘MT5账户（Exness Demo）</b> — 通过Windows VM上的MT5 Python API实时查询真实点差、真实掉期费（非估算），<code class="code-chip">probe_swap.py</code> / <code class="code-chip">probe_fx_swaps.py</code>。</li>
+            <li>复利权益曲线统一用 <code class="code-chip">equity_sim.py</code>：每笔风险1%本金，5倍杠杆上限。</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="verify">
+    <div class="card">
+      <details>
+        <summary><span class="tag closed">已核验</span>起点：跨数据源宣称核验</summary>
+        <div class="body">
+          <p>用户贴出一份 Dukascopy vs HistData.com 黄金策略回测对比表（4个策略：1h/2h唐奇安+SMA50、2h ATR通道、1h布林突破），与本地 <code class="code-chip">research/results_cross_source.csv</code>、<code class="code-chip">research/cross_source/README_trades.md</code> 逐条核对——<b>数字完全吻合，非伪造宣称</b>。但这组早期数字用的成本常数后来被发现差了一个数量级，所有后续工作都围绕修正这个问题展开。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="structure">
+    <div class="card">
+      <details>
+        <summary><span class="tag live">基准</span>核心策略结构</summary>
+        <div class="body">
+          <p><b>H1 唐奇安(20)突破 + D1 SMA50 趋势过滤 + 2×ATR 跟踪止损 + 唐奇安(N)收盘离场，只做多</b>——本研究线反复测试的基准结构：</p>
+          <ul>
+            <li>入场：H1收盘价突破最近20根H1最高价，且前一日D1收盘价高于D1的50日均线（顺势过滤）。</li>
+            <li>止损：固定初始止损=入场价−2×ATR(20)，此后按2×ATR跟踪上移。</li>
+            <li>离场：跟踪止损触发 或 H1收盘价跌破最近N根唐奇安通道低点，先触发者为准。</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="cost-fix">
+    <div class="card">
+      <details>
+        <summary><span class="tag closed">已修正</span>成本常数 + 止损定义修正</summary>
+        <div class="body">
+          <p>最初的"无ATR跟踪"消融脚本有两处错误：① 完全没有止损（无限风险），应为"固定初始止损不跟踪+唐奇安收盘离场"；② 用按比例的点差模型，应为research/目录里固定$0.30往返成本。</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th></th><th class="num">样本数</th><th class="num">总收益</th></tr></thead>
+            <tbody>
+              <tr><td>修正前</td><td class="num">—</td><td class="num lose">+134.7%（明显偏低）</td></tr>
+              <tr><td><b>修正后</b></td><td class="num">935</td><td class="num win">+325.4%（与research宣称~255%量级吻合）</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="sweep">
+    <div class="card">
+      <details>
+        <summary><span class="tag closed">已确认</span>多周期扫描（M15/M30/H1/H4/D1）</summary>
+        <div class="body">
+          <p>用同样修正后的$0.30固定成本方法论重跑 <code class="code-chip">sweep_timeframes.py</code>，<b>H1被确认为统计支撑最好的入场周期</b>——优于M15/M30（噪音大、交易过于频繁）和H4/D1（信号过于稀疏）。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="exit">
+    <div class="card">
+      <details>
+        <summary><span class="tag closed">已定案</span>止盈/止损优化尝试</summary>
+        <div class="body">
+          <ul>
+            <li>✅ 唐奇安离场窗口从10拓宽到20/30是<b>真实、walk-forward验证过的改进</b>（之后所有测试都采用20）。</li>
+            <li>❌ 固定R倍数止盈：提前砍掉趋势跟踪最重要的大赢家，变差。</li>
+            <li>❌ 低R分批止盈：同样因提前锁定部分利润削弱趋势捕获能力，变差。</li>
+            <li>⚠️ ATR跟踪止损倍数敏感性：结果噪音大、非单调，调参有明显过拟合风险，不建议当作可优化维度。</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="swap">
+    <div class="card">
+      <details open>
+        <summary><span class="tag bad">关键转折</span>真实掉期费(Swap)发现——实盘查询非估算</summary>
+        <div class="body">
+          <p>用户提出两个关键质疑：①过夜持仓是否有高额掉期费、是否必须日内平仓？②信号是否过于稀疏，全年收益会不会很低？没有靠猜测回答，直接写脚本在实盘Demo账户上用MT5 Python API实时查询（<code class="code-chip">probe_swap.py</code>），并用WebSearch核实官方换算公式 <code class="code-chip">Money = swap_points × point_size × contract_size × lots</code>（非假设）。</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th>XAUUSDm</th><th class="num">数值</th></tr></thead>
+            <tbody>
+              <tr><td>swap_long</td><td class="num lose">-522.2 points ≈ -$52.22/手/晚</td></tr>
+              <tr><td>swap_short</td><td class="num win">0.0（空头零持仓费）</td></tr>
+              <tr><td>swap_rollover3days</td><td class="num">3（周三三倍）</td></tr>
+              <tr><td>trade_contract_size</td><td class="num">100（1手=100盎司）</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>把真实成本代入H1多头策略后，结果被大幅侵蚀：</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th></th><th class="num">原始(无掉期费)</th><th class="num">加入真实掉期费</th></tr></thead>
+            <tbody>
+              <tr><td>总收益</td><td class="num">+232.8%</td><td class="num lose">+36.5%</td></tr>
+              <tr><td>Sharpe</td><td class="num">0.53</td><td class="num lose">0.17</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p class="note">"强制日内平仓"变体（避免隔夜费但牺牲部分趋势捕获）是两个现实选项里较好的一个，但依然远弱于最初未计真实成本的宣称数字。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="baseline">
+    <div class="card">
+      <details open>
+        <summary><span class="tag bad">诚实基准</span>主动交易 vs 买入持有黄金</summary>
+        <div class="body">
+          <p>用户追问"年化3.81%有什么意义"——倒逼做一次最朴素但最关键的对比：同期买入持有黄金的表现是多少？</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th>方案</th><th class="num">CAGR</th><th class="num">MaxDD</th><th class="num">Sharpe</th></tr></thead>
+            <tbody>
+              <tr><td>H1策略(最佳存活变体，计入真实成本+掉期费)</td><td class="num">3.81%</td><td class="num">-32.1%</td><td class="num lose">0.32</td></tr>
+              <tr><td><b>买入持有黄金(同期，什么都不做)</b></td><td class="num win">8.11%</td><td class="num">-44.68%</td><td class="num win">0.545</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p><b>结论：买入持有黄金的夏普比率反而高于所有测试过的主动交易变体。</b>这条研究线在诚实计入全部真实成本之后，不构成相对于被动持有的真实可交易优势。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="short">
+    <div class="card">
+      <details>
+        <summary><span class="tag closed">已证伪</span>空头侧测试：能否利用swap_short=0？</summary>
+        <div class="body">
+          <p>既然黄金空头零持仓费，<code class="code-chip">backtest_short_donchian.py</code> 把多头规则完全镜像到空头（唐奇安(20)跌破+D1 SMA50下行过滤+2×ATR跟踪+唐奇安(20)离场）。</p>
+          <ul>
+            <li>n=845，胜率34.7%，盈亏比2.40，总收益+60.7%，CAGR 2.91%，<b>最大回撤-51.9%</b>，复利Sharpe仅0.22。</li>
+            <li>Walk-forward（7个滚动1年窗口）：<b>7正7负，相当于抛硬币</b>，不具备稳健性。</li>
+          </ul>
+          <p><b>结论：成本结构的不对称性是真实的，但是没用</b>——黄金这段历史是罕见的长期牛市，下跌突破信号本身在这个样本里就没有可靠edge，零持仓费这个优势没有信号可以附着。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="fxmajors">
+    <div class="card">
+      <details open>
+        <summary><span class="tag closed">已证伪</span>推广到外汇主要货币对(EURUSD/GBPUSD/AUDUSD)</summary>
+        <div class="body">
+          <p>同一套validated多头结构，这次从一开始就把真实掉期费计入（而非事后发现），搬到流动性最好的美元计价外汇主要货币对上，测试是否存在类似的不对称机会。实盘MT5账户查询10个候选货币对后，选择EURUSD/GBPUSD/AUDUSD(USD计价，无需汇率换算)。</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th>货币对</th><th class="num">n</th><th class="num">胜率</th><th class="num">盈亏比</th><th class="num">无掉期费收益</th><th class="num">含掉期费收益</th></tr></thead>
+            <tbody>
+              <tr><td>EURUSD</td><td class="num">953</td><td class="num">33.6%</td><td class="num">1.79</td><td class="num lose">-19.1%</td><td class="num lose">-31.7%</td></tr>
+              <tr><td>GBPUSD</td><td class="num">1017</td><td class="num">33.4%</td><td class="num">1.72</td><td class="num lose">-50.4%</td><td class="num lose">-53.3%</td></tr>
+              <tr><td>AUDUSD</td><td class="num">1056</td><td class="num">33.2%</td><td class="num">1.52</td><td class="num lose">-74.5%</td><td class="num lose">-74.5%(做多免掉期)</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p><b>三个货币对全部亏损，且是在完全不计掉期费的情况下就已经亏损</b>——这比黄金的失败模式更彻底：黄金是"信号本身有效、被成本侵蚀大半"，外汇主要货币对是"信号本身就没有edge"。</p>
+          <p class="note">这套结构能在黄金上跑出正收益，是黄金这段历史罕见长期牛市的产物，不是可以泛化到外汇市场的通用趋势跟踪edge。掉期费的不对称结构在这里同样是"真实但无用"，与黄金空头测试是同一个教训。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="ict-video">
+    <div class="card">
+      <details open>
+        <summary><span class="tag new">10-08新增</span>B站视频策略测试："顺势+截取+结构"ICT风格日内交易法</summary>
+        <div class="body">
+          <p><b>来源</b>：<a href="https://www.bilibili.com/video/BV1iEMS6XEgv/" target="_blank" rel="noopener">《XAU黄金日内交易策略，截取+顺势+结构，我的 500U到11000U 实战》</a>（BV1iEMS6XEgv，UP"币圈避雷针"，2026-08-06发布，时长16:13）。视频无字幕/简介/有效评论可抓取，通过提取视频真实mp4文件逐帧截图识别画面文字还原规则。</p>
+          <p><b>视频方法论（ICT风格）</b>：截取(Liquidity Sweep，15m/1h级别影线刺穿摆动高低点后收回，视频强调"一定有量")；顺势(只做高周期趋势方向)；结构(小级别FVG公允价值缺口+结构突破确认入场，止损设在截取极值外侧约5个点)。视频结尾为付费进群引流页，属课程销售型视频。</p>
+          <p class="note">系统化限制：HistData M1数据volume全部为0，"一定有量"这一确认条件无法测试；为避免事后调参，用更简单的"结构突破"代替FVG确认；止损跟踪与离场沿用本研究线统一验证过的2×ATR跟踪+唐奇安(20)离场结构，便于直接对比。</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th>指标</th><th class="num">数值</th></tr></thead>
+            <tbody>
+              <tr><td>交易笔数(多/空)</td><td class="num">16,958(9060/7898)</td></tr>
+              <tr><td>胜率</td><td class="num lose">25.5%</td></tr>
+              <tr><td>盈亏比 / 盈利因子</td><td class="num">1.57 / 0.54</td></tr>
+              <tr><td>总收益(含真实掉期费)</td><td class="num lose">-100.0%(复利爆仓)</td></tr>
+              <tr><td>Sharpe</td><td class="num lose">-6.6</td></tr>
+              <tr><td>中位数持仓时长</td><td class="num">9.0分钟</td></tr>
+              <tr><td>Walk-forward(14个滚动年度窗口)</td><td class="num lose">0正 / 14负</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p><b>结论：机械化版本没有任何边际</b>——25.5%胜率配1.57盈亏比是明显负期望(盈亏平衡需约39%胜率)，每年约1000笔交易在1%风险复利仓位下迅速把账户打爆，14个滚动年度窗口无一例外全部亏损。与此前遇到的"营销号宣称/未计真实成本"套路是同一类问题的变体——视频展示的是经主观筛选的"干净案例"，机械化后暴露真实频率(约3笔/天)和真实胜率远不如视频呈现的那样有选择性。</p>
+          <p class="note">诚实局限：这是对一个依赖主观判断(量能确认、FVG形态、结构关键点选择)的方法的系统化近似，不是逐字复刻；一个经验丰富的交易员用更严格的主观筛选，理论上可能过滤掉当前规则抓到的大部分噪音信号。但就"能否把方法变成清晰、可编码、不靠事后调参的规则"而言，答案是否定的——现有证据不支持将其视为可信、可自动化的edge。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="range-fade-video">
+    <div class="card">
+      <details open>
+        <summary><span class="tag new">10-08新增</span>B站视频策略测试："4小时区间假突破打脸"策略</summary>
+        <div class="body">
+          <p><b>来源</b>：<a href="https://www.bilibili.com/video/BV1UG1YBpEnY/" target="_blank" rel="noopener">《【中配】史上最强5分钟短线交易策略 简单有效》</a>（BV1UG1YBpEnY，UP"AI译片君"，中文配音搬运自YouTube《The BEST 5 Minute Scalping Strategy Ever》by Data Trader，时长15:14）。同样无字幕/有效评论，通过下载mp4逐帧截图识别烧录字幕还原规则，视频用BTC/USDT、EUR/USD、XAU/USD三个品种演示同一套规则。</p>
+          <p><b>视频三步法</b>：① 取当天第一根4小时K线，其高/低点定义当天"区间"；② 观察5分钟K线，收盘突破区间上/下沿记为一次突破；③ 等价格收盘收回区间内(假突破确认)，反向入场：止损设在被突破的那一侧区间边界，止盈至少2倍止损距离(R:R≥1:2)。规则是视频给出的明确数字规则，不依赖FVG等主观形态判断，比"ICT截取"视频(见上一节)更贴近字面规则系统化。</p>
+          <p class="note">时区对齐核验（用户追问后补做）：此前以为HistData时间戳是"固定EST无夏令时调整"是错的——用NFP(纽约当地时间8:30发布)锚点测2012-2023年70个月份样本，冬/夏令时月份波动峰值本地小时数中位数都是8:30；外汇周日固定纽约当地17:00开盘，EURUSD数据里全年12个月全部一致显示17点开盘，均无夏令时偏移。说明数据时间戳其实是<b>真·纽约当地时间(含夏令时调整)</b>，脚本"00:00-03:59"窗口全年精确对齐纽约时间，不存在系统性误差。</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th>品种</th><th class="num">n</th><th class="num">胜率</th><th class="num">盈亏比</th><th class="num">盈利因子</th><th class="num">中位持仓(分)</th><th class="num">复利总收益</th><th class="num">Sharpe</th><th class="num">年度WF(正/负)</th></tr></thead>
+            <tbody>
+              <tr><td>XAUUSD</td><td class="num">18,589</td><td class="num lose">13.6%</td><td class="num">1.27</td><td class="num">0.20</td><td class="num">5</td><td class="num lose">-100.0%</td><td class="num lose">-11.35</td><td class="num lose">0/17</td></tr>
+              <tr><td>EURUSD</td><td class="num">17,644</td><td class="num lose">6.9%</td><td class="num">0.95</td><td class="num">0.07</td><td class="num">5</td><td class="num lose">-100.0%</td><td class="num lose">-12.76</td><td class="num lose">0/17</td></tr>
+              <tr><td>GBPUSD</td><td class="num">17,691</td><td class="num lose">7.7%</td><td class="num">0.85</td><td class="num">0.07</td><td class="num">5</td><td class="num lose">-100.0%</td><td class="num lose">-12.46</td><td class="num lose">0/17</td></tr>
+              <tr><td>AUDUSD</td><td class="num">19,195</td><td class="num lose">9.0%</td><td class="num">0.87</td><td class="num">0.09</td><td class="num">5</td><td class="num lose">-100.0%</td><td class="num lose">-12.94</td><td class="num lose">0/17</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>四个品种全部0正17负，胜率全部远低于2R止盈所需的盈亏平衡胜率(33.3%)，中位持仓仅5分钟——多数"假突破"入场后立刻被打回止损。项目里早先写好但从未跑过的通用版本 <code class="code-chip">backtest_fade_failed_breakout.py</code>(滚动Donchian区间代替锚定4H区间，36组lookback/confirm/max_hold参数网格)做交叉验证：<b>全部为负</b>，胜率3.8%-23%，Sharpe -13.5至-23.0，与锚定4H区间版本结论完全一致。</p>
+          <p><b>结论：与ICT截取视频一样，这是一条"展示案例经过筛选"的交易教学视频，严格按字面规则机械化后呈现决定性负结果，且用两套独立实现(锚定4H / 滚动Donchian)交叉验证得到同一结论，排除了单一实现bug的可能性。</b></p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="btc-swap">
+    <div class="card">
+      <details open>
+        <summary><span class="tag new">10-08新增</span>附加核验：BTC/USDT也有真实隔夜费吗？</summary>
+        <div class="body">
+          <p>上一节视频用BTC/USDT、EUR/USD、XAU/USD三个品种演示同一套规则，用户追问BTC/USDT是否也有持仓过夜费。没有凭常识假设，直接在实盘MT5账户上用 <code class="code-chip">probe_crypto_swaps.py</code> 查询。</p>
+          <p class="note">过程记录：环境里此前装过的 <code class="code-chip">MetaTrader5</code> pip包被清空了，重新pip install才查到数据；另外发现Windows VM系统级 <code class="code-chip">PYTHONPATH=C:\</code> 会抑制Python默认把脚本目录加入sys.path，导致同目录下import config_local失败，脚本里加了显式sys.path.insert规避——是环境原有配置的副作用，不是新bug。</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th>品种</th><th class="num">swap_long</th><th class="num">swap_short</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td>BTCUSDTm</td><td class="num lose">-1833.6pt ≈ -$18.34/手/晚</td><td class="num win">0.0</td><td>账户上实际可交易的BTC/USDT</td></tr>
+              <tr><td>BTCUSDm</td><td class="num lose">同上</td><td class="num win">同上</td><td>报价货币USD而非USDT，数值一致</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p><b>结论：BTC/USDT确实有真实隔夜费，且是与黄金完全相同的不对称结构(多头收费/空头免费)。</b>这个不对称结构已在黄金空头(第7节)和外汇主要货币对(第8节)测过两次都失败——如果未来在BTC上复用同一类策略大概率撞上同样问题，不建议抱过高期望。目前未测试BTC策略本身，因为项目没有BTC长历史分钟数据(只有XAU/EUR/GBP/AUD)。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="other-author-diff">
+    <div class="card">
+      <details open>
+        <summary><span class="tag bad">含纠错</span>附加验证：用真实tick_volume补测第9节"必须有量"条件</summary>
+        <div class="body">
+          <p><b>起因（含一次方法论纠错）</b>：用户贴了另一位作者"编程小船长"的 <a href="https://www.bilibili.com/video/BV1bR8C6JEzW/" target="_blank" rel="noopener">《一单一结策略的最终参数优化（100点差回测，2016年1月1日到2026年8月17日）》</a>（BV1bR8C6JEzW），问为什么其结果(胜率67.83%/盈利因子1.26/总收益+660.97%)和第9节的ICT策略(胜率25.5%/盈利因子0.54/-100%)不一样。<b>最初在没有核实"两个视频是否测的是同一策略"这个前提下，就直接做了数字对比和差异归因——用户随后指出这是弄错了，两个视频根本不是同一回事（"一单一结"是另一位作者自己的持仓管理/EA概念，标题、简介都未提及ICT/截取/结构，也未引用第9节那个视频）。对比本身建立在未经核实的错误前提上，已撤回。</b></p>
+          <p class="note">方法论教训（比具体数字更重要）：做"为什么A和B结果不一样"这类归因分析前，必须先核实A和B测的确实是同一件事，不能因为问法里暗示了关联就默认接受——不仅不该过早放弃假设，也不该在没核实前提的情况下过早展开归因。</p>
+          <p><b>撤回对比后，仍然独立成立的部分</b>：那次分析里提到的"MT5 broker数据有真实tick_volume而HistData.com没有，第9节因此被迫放弃'一定要有量'这个确认条件"这件事本身是真实的、与第二个视频无关，值得单独补测。用本账户自己导出的真实tick_volume数据(<code class="code-chip">data/XAUUSDm_M1.parquet</code>)重跑第9节同一套"顺势+截取+结构"规则，对比有/无成交量过滤。硬性限制：该账户MT5终端M1历史只保留约100天(<code class="code-chip">probe_m1_depth.py</code>实测边界2026-07-01)，样本量和统计功效远不及第9节16年/14折WF，只能当方向性诊断。</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th></th><th class="num">n</th><th class="num">胜率</th><th class="num">盈利因子</th><th class="num">总收益</th><th class="num">Sharpe</th></tr></thead>
+            <tbody>
+              <tr><td>无成交量过滤</td><td class="num">334</td><td class="num lose">35.0%</td><td class="num">0.78</td><td class="num lose">-17.5%</td><td class="num lose">-3.64</td></tr>
+              <tr><td>有成交量过滤(15m截取K线量&gt;前20均值)</td><td class="num">174</td><td class="num lose">36.8%</td><td class="num">0.73</td><td class="num lose">-13.5%</td><td class="num lose">-3.28</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p><b>结论：真实成交量过滤没能把第9节这套策略从负期望翻正</b>——胜率仅从35.0%微升到36.8%(样本174-334笔，差异在统计上不可信)，盈利因子反而略降。第9节测出的-100%/胜率25.5%不能简单归因于"HistData没有真实成交量数据"——换成真实tick_volume后，即使加上成交量过滤，策略依然明确负期望，只是绝对胜率因样本窗口短(100天)和数据源不同有一定差异(35-37% vs 25.5%)，但没有逆转结论方向。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="grid-martingale">
+    <div class="card">
+      <details open>
+        <summary><span class="tag new">10-09新增</span>B站视频策略测试：网格马丁格尔"即使做错方向也赚钱"策略</summary>
+        <div class="body">
+          <p><b>来源</b>：<a href="https://www.bilibili.com/video/BV1Em421N7k3/" target="_blank" rel="noopener">《像一个十足的傻瓜一样去交易，适合你我普通人的交易策略，太聪明的人别看》</a>（BV1Em421N7k3，UP"和AlgoLee一起交易"，2024-05-28发布，时长19:39）。无官方字幕/有效评论总结，通过下载mp4+ffmpeg按30秒间隔截帧读取烧录字幕还原规则。</p>
+          <p><b>视频内容</b>：两段演示。① 人工演示(NZD/CAD日线)：在支撑区买入，若价格继续下跌就在下一个更低支撑区再加一笔多单(不设止损)，等反弹解套整体平仓；字幕明确展示过一次浮亏<b>-10,019 CAD</b>，原话"要的就是这个效果""他的盈利靠的就是第一次的正确"——视频本身没有回避这种深度浮亏。② MT5 EA回测(EA命名"EvenWhenIAmWrong"，NZDCAD H1，2012-2024，初始1万)：屏幕可见设置包括网格距离起点600点、<b>止损点数=0(完全不设止损)</b>、初始手数0.2、加仓次数开始保本=10，12年权益曲线从1万涨到约3.6-4.1万，曲线中有数次尖锐回撤。本质是无止损网格/马丁格尔：价格反向每移动固定距离就加一笔仓位(手数按倍数递增)，靠均值回归解套，视频案例没有撞上让账户爆仓的单边行情。</p>
+          <p class="note">测试方法说明：项目本地没有NZDCAD历史数据(只有EURUSD/GBPUSD/AUDUSD/XAUUSD)，且EA闭源无法还原精确入场信号/止盈公式。<code class="code-chip">backtest_grid_martingale.py</code> 不追求复刻视频具体数字，而是压力测试这套机制本身——用4个可用品种16年H1历史，测试"无止损+固定距离网格加仓+手数倍数递增"这个结构在更长历史/更多品种上是否会在某个时点把账户亏穿：每品种测多头/空头两个方向，手数递增倍数测1.0/1.5/2.0三档，网格间距0.60%(对标视频约600点量级)，篮子浮盈达$50即平仓重开，账户权益任意时点≤0判定"爆仓"。</p>
+          <div class="tablewrap">
+          <table>
+            <thead><tr><th>品种</th><th class="num">多头×1.0</th><th class="num">多头×1.5</th><th class="num">多头×2.0</th><th class="num">空头×1.0</th><th class="num">空头×1.5</th><th class="num">空头×2.0</th></tr></thead>
+            <tbody>
+              <tr><td>EURUSD</td><td class="num lose">爆仓'10-02</td><td class="num lose">爆仓'10-01</td><td class="num lose">爆仓'10-01</td><td class="num lose">爆仓'10-08</td><td class="num lose">爆仓'10-09</td><td class="num lose">爆仓'10-10</td></tr>
+              <tr><td>GBPUSD</td><td class="num lose">爆仓'10-02</td><td class="num lose">爆仓'10-02</td><td class="num lose">爆仓'10-03</td><td class="num win">存活+1439.5%</td><td class="num win">存活+3543.1%</td><td class="num lose">爆仓'10-08</td></tr>
+              <tr><td>AUDUSD</td><td class="num lose">爆仓'10-05</td><td class="num lose">爆仓'10-05</td><td class="num win">存活+6868.5%</td><td class="num lose">爆仓'10-09</td><td class="num lose">爆仓'10-09</td><td class="num win">存活+4667.2%</td></tr>
+              <tr><td>XAUUSD</td><td class="num lose">爆仓'13-06</td><td class="num lose">爆仓'13-04</td><td class="num lose">爆仓'10-02</td><td class="num lose">爆仓'10-05</td><td class="num lose">爆仓'10-10</td><td class="num lose">爆仓'11-07</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p><b>24组压力测试里21组爆仓(87.5%)，且几乎全部在1-3.5年内就爆仓(多数在第一年)</b>，只有3组撑过完整16年(GBPUSD空头×1.0/×1.5、AUDUSD多头×2.0、AUDUSD空头×2.0)。这3组存活也不能当作"机制靠谱"的证据——恰好是方向与该品种那段时期的长期走势一致(如GBPUSD 2010年后长期走弱，空头网格顺势而非逆势)，本质是方向性运气，换个方向/品种同样参数就迅速爆仓。</p>
+          <p><b>结论：视频展示的"网格马丁格尔"策略核心风险是真实存在的尾部风险，不是危言耸听</b>。12年NZDCAD回测没撞上爆仓窗口，不代表这套无止损加仓机制安全——87.5%的压力测试组合在更长历史/更多品种下迅速亏穿账户，说明"能正常运行N年"更多取决于有没有撞上单边趋势，而非策略本身有风险控制。标题"适合你我普通人"和"太聪明的人别看"这类话术，掩盖了无止损网格策略对账户的真实杀伤力。本测试是对机制本身的压力测试，不是对该EA精确参数/入场信号的复刻(闭源EA细节无法从视频还原)，因此不直接对标视频"12年3-4倍"这个数字，但两者共享同一个核心结论：无止损几何加仓，在足够长的历史窗口下，大概率会撞上账户爆仓的单边行情。</p>
+          <p class="note"><b>追加测试(用户提出)：用"阈值翻转"代替无限加仓</b>——多头网格加到N层后若继续逆行，整篮止损平仓，反手开单方向仓位(不再加仓)，移动止损(回撤1个网格间距)追踪，触发或达到盈利目标即平仓回默认方向重开网格。<code class="code-chip">backtest_grid_flip.py</code> 测4品种×网格层数2/3/5×手数倍数1.0/1.5/2.0共36组：<b>31组仍爆仓(86.1%)</b>，相比纯网格的87.5%几乎没有实质改善——死法从"被单边行情一次打穿"变成"震荡行情里反复止损反手、慢性失血"，是止损反手(SAR)系统的固有弱点，与本研究线此前测过的趋势跟踪/反手类策略结论互相印证。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="verdict-detail">
+    <div class="card">
+      <details open>
+        <summary><span class="tag new">结论</span>全局结论</summary>
+        <div class="body">
+          <ul>
+            <li><b>成本/掉期费是这条研究线最大的单一变量</b>：几乎每一个"看起来不错"的早期数字，补上真实交易成本和真实掉期费后都大幅缩水甚至转负。</li>
+            <li><b>黄金H1唐奇安趋势突破策略，计入全部真实成本后，跑不赢简单买入持有黄金</b>(Sharpe 0.32 vs 0.545)。</li>
+            <li><b>成本结构不对称性(黄金空头免掉期费)真实存在，但两次尝试利用它(黄金空头、外汇主要货币对多头)都失败</b>——问题根源在信号本身缺乏edge，不是成本。黄金的"牛市红利"不能泛化到其他货币对。</li>
+            <li><b>三条B站交易教学视频策略</b>("顺势+截取+结构"ICT风格、"4小时区间假突破打脸"、"网格马丁格尔无止损加仓")系统化测试/压力测试后均呈现负面结果：前两条是胜率/盈亏比层面的负期望(账户复利爆仓、14/14与0/17滚动窗口全负，后者还用两套独立实现交叉验证排除了bug可能性)；第三条性质不同——不是信号没有edge，而是机制本身对尾部风险没有保护，24组压力测试里87.5%在1-3.5年内爆仓。三者共同延续"展示案例经筛选、机械化/压力测试后真实表现远低于宣传"这一模式。</li>
+            <li><b>方法论收获（高于具体数字）</b>：① 任何声称的回测结果必须独立用真实数据复现，不能相信截图/口述；② 真实隔夜/持仓成本必须主动查询账户实际数据，不能假设或估算；③ 买入持有永远是主动策略的诚实基准，任何"年化X%"脱离这个对照都没有意义；④ 同一类逻辑用独立的两次实现交叉验证，比单次实现更能排除bug；⑤ 对"无止损加仓"类策略，正确的测试方式不是复刻单一案例的权益曲线，而是压力测试机制本身在更长历史/更多品种上是否存在爆仓窗口。</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    forex_trader / 黄金外汇研究地图 · 生成于 2026-10-09 · 数据与脚本见 forex_trader/ 目录，详细清单见 RESEARCH_FINDINGS.md
+  </footer>
+
+</div>
+
+</body></html>

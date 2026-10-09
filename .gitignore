@@ -6,3 +6,4 @@ venv/
 *.log
 data/
 .DS_Store
+config_local.py
