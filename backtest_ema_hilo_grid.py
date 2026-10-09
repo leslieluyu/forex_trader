@@ -131,7 +131,7 @@ def compute_hilo_direction(m5):
     return pd.Series(direction, index=m5.index)
 
 
-def run_ema_hilo_grid(symbol, contract_size):
+def run_ema_hilo_grid(symbol, contract_size, initial_balance=INITIAL_BALANCE):
     m1 = load_m1(symbol)
     m15 = resample_ohlc(m1, "15min")
     m5 = resample_ohlc(m1, "5min")
@@ -159,14 +159,14 @@ def run_ema_hilo_grid(symbol, contract_size):
     be_start_dist = BE_START_PTS * point
     be_step_dist = BE_STEP_PTS * point
 
-    balance = INITIAL_BALANCE
+    balance = initial_balance
     direction = 0
     legs_lot = []   # list of (lot, entry_price)
     last_add_price = None
     stop_level = None
     be_active = False
     trail_active = False
-    peak_equity = INITIAL_BALANCE
+    peak_equity = initial_balance
     max_dd_pct = 0.0
     trades = []
     forced_stopouts = 0
@@ -283,7 +283,8 @@ def run_ema_hilo_grid(symbol, contract_size):
         n_trades=n,
         win_rate=win_rate,
         final_balance=balance,
-        total_return_pct=(balance / INITIAL_BALANCE - 1) * 100,
+        total_return_pct=(balance / initial_balance - 1) * 100,
+        pnl_usd=balance - initial_balance,
         max_dd_pct=max_dd_pct,
         forced_equity_stopouts=forced_stopouts,
         blown=blown,
@@ -291,6 +292,24 @@ def run_ema_hilo_grid(symbol, contract_size):
         years_to_blow=years_to_blow,
         total_years=total_years,
     )
+
+
+def run_capital_sweep():
+    """Same lot-sizing path (0.01 -> 2.0, unchanged), only the STARTING
+    CAPITAL changes -- i.e. lower effective leverage, not a bigger bet.
+    Answers: does this EA design just need "enough money" to survive, and if
+    so, is the dollar P&L (not %) actually positive once it survives?"""
+    balances = [1_000, 5_000, 20_000, 50_000, 100_000, 300_000, 1_000_000]
+    print(f"\n{'SYMBOL':8s} {'initBal':>10s} {'blown':>6s} {'yrsToBlow':>10s} {'finalBal':>14s} {'pnl$':>14s} {'ret%':>9s} {'maxDD%':>9s} {'eqStops':>8s}")
+    for symbol, contract_size in SYMBOLS.items():
+        for bal in balances:
+            r = run_ema_hilo_grid(symbol, contract_size, initial_balance=bal)
+            ytb = f"{r['years_to_blow']:.1f}" if r["years_to_blow"] is not None else "-"
+            print(
+                f"{symbol:8s} {bal:10,d} {str(r['blown']):>6s} {ytb:>10s} "
+                f"{r['final_balance']:14,.0f} {r['pnl_usd']:14,.0f} {r['total_return_pct']:8.1f}% "
+                f"{r['max_dd_pct']:8.1f}% {r['forced_equity_stopouts']:8d}"
+            )
 
 
 if __name__ == "__main__":
@@ -302,3 +321,5 @@ if __name__ == "__main__":
             f"{symbol:8s} {r['n_trades']:7d} {r['win_rate']:6.1f}% {r['total_return_pct']:11.1f}% "
             f"{r['max_dd_pct']:8.1f}% {r['forced_equity_stopouts']:8d} {str(r['blown']):>6s} {ytb:>10s} {r['total_years']:7.1f}"
         )
+
+    run_capital_sweep()
